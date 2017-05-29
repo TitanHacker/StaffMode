@@ -1,0 +1,2 @@
+# StaffMode
+staffmode plugin
