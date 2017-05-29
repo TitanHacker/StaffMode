@@ -1,0 +1,10 @@
+name: StaffMode
+version: 0.0.1
+author: Timislol12
+main: me.Timislol12.staffmode.Main
+prefix: StaffMode
+
+commands: 
+   staffmode:
+    description: Get in staffmode
+    usage: /<command>
