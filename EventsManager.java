@@ -16,11 +16,12 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.yaml.snakeyaml.events.Event.ID;
 
 public class EventsManager implements Listener {
-
+	private  ArrayList<Player> vanished = new ArrayList<Player>();
 	private Main plugin = Main.getPlugin(Main.class);
+	
+	
 	@EventHandler
 	public void onFoodChange (FoodLevelChangeEvent e) {
 		Player p = (Player) e.getEntity();
@@ -79,11 +80,24 @@ public class EventsManager implements Listener {
 		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 			Player p = e.getPlayer();
 			ItemStack stack2 = p.getItemInHand();
-			if(stack2 != null &&stack2.getTypeId() == id. && stack2.hasItemMeta() && stack2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Random Teleport")){
-				ArrayList<Player> players = new ArrayList<Player>();
-				for (Player e1 : Bukkit.getOnlinePlayers()) players.add(e1);
-				Player randomPlayer = players.get(new Random().nextInt(players.size()));
-				p.teleport(randomPlayer.getLocation());
+			if(stack2 != null &&stack2.getDurability() == 10 && stack2.hasItemMeta() && stack2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Vanish On")){
+				p.sendMessage(ChatColor.AQUA + "You are now in vanish!");
+				for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
+					pl.hidePlayer(p);
+					} vanished.add(p);
+					
+			}
+		}
+	}
+	public void onClick4(PlayerInteractEvent e) {
+		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK ) {
+			Player p = e.getPlayer();
+			ItemStack stack2 = p.getItemInHand();
+			if(stack2 != null &&stack2.getDurability() == 1 && stack2.hasItemMeta() && stack2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Vanish Off")){
+				p.sendMessage(ChatColor.AQUA + "You are now unvanished!");
+				for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
+					pl.showPlayer(p);
+				} vanished.remove(p);
 			}
 		}
 	}
