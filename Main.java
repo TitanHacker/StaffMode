@@ -79,14 +79,20 @@ public class Main extends JavaPlugin implements Listener{
 							grass.setItemMeta(stackMeta1);
 							
 							@SuppressWarnings("deprecation")
-							ItemStack vanish = new ItemStack(351, 1, (short) 10);
-							ItemMeta vanishMeta = vanish.getItemMeta();
+							ItemStack vanishon = new ItemStack(351, 1, (short) 10);
+							ItemMeta vanishMeta = vanishon.getItemMeta();
 							vanishMeta.setDisplayName(ChatColor.AQUA + "Vanish On");
-							vanish.setItemMeta(vanishMeta);
+							vanishon.setItemMeta(vanishMeta);
+							
+							@SuppressWarnings("deprecation")
+							ItemStack vanishoff = new ItemStack(351, 1, (short) 1);
+							ItemMeta vanishMeta2 = vanishoff.getItemMeta();
+							vanishMeta2.setDisplayName(ChatColor.AQUA + "Vanish Off");
+							vanishoff.setItemMeta(vanishMeta2);
 							
 							
-							
-							p.getInventory().setItem(8, vanish); // vanish //
+							p.getInventory().setItem(7, vanishoff); //vanishoff//
+							p.getInventory().setItem(8, vanishon); // vanishon //
 							p.getInventory().setItem(1, stack); // compass //
 							p.getInventory().setItem(3, grass); // grass //
 							
