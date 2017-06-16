@@ -8,3 +8,12 @@ commands:
    staffmode:
     description: Get in staffmode
     usage: /<command>
+   staff:
+    description: Info about Staff-Mode
+    usage: /<command>
+   report:
+    description: Report a player
+    usage: /<command>
+   staffchat:
+    description: special staffchat
+    usage: /<command>
