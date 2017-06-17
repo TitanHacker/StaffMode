@@ -16,7 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin implements Listener{
+public class Main extends JavaPlugin { // removed the Listener implementation as there are no events in this class.
 
 	public HashMap <Player, ItemStack[]> pArmor = new HashMap<Player, ItemStack[]>();
 	public HashMap <Player, ItemStack[]> pItems = new HashMap<Player, ItemStack[]>();
@@ -26,15 +26,16 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(new EventsManager(), this);
-		getServer().getPluginManager().registerEvents(this, this);
-		RegisterCommands ();
+		// There were no events in this class, so I removed the event register.
+		registerCommands();
 	}
 
-	public void onDisable() {
+	public void onDisable() { // It might be a good idea to clear ArrayLists onDisable to prevent data leaks.
 		
 	}
 	
-	private void RegisterCommands() {
+	// I changed this method's name to follow camelCase naming conventions.
+	private void registerCommands() {
 		getCommand("report").setExecutor(new Report());
 		getCommand("staffchat").setExecutor(new staffchat());
 		
@@ -49,6 +50,8 @@ public class Main extends JavaPlugin implements Listener{
 			if(!Main.this.staff.contains(p.getName())) {
 				p.sendMessage(prefix + ChatColor.AQUA + " You're now in staffmode");
 				
+				// I don't think you need to do "Main.this"
+				// Instead, you can just stick with "staff.add"
 				Main.this.staff.add(p.getName());
 				
 				for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
@@ -103,7 +106,7 @@ public class Main extends JavaPlugin implements Listener{
 							p.sendMessage(prefix + ChatColor.AQUA + " Chaning to StaffMode was cancelled");
 						}
 					}
-				}, 0L);
+				}, 0L); // If it's 0L, couldn't you just do a repeating task?
 			} else {
 				Main.this.staff.remove(p.getName());
 				p.sendMessage("You are already in staff mode, I wil get you in normal mode");
