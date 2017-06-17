@@ -18,9 +18,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class EventsManager implements Listener {
-	private  ArrayList<Player> vanished = new ArrayList<Player>();
-	private Main plugin = Main.getPlugin(Main.class);
 	
+	// Before we start, please use this as a learning opportunity rather than copy + pasting. I also wrote this in GitHub, so spacing may be messed up.
+	
+	// In Java 8, you don't need to do <Player> again.
+	// Also - consider using an ArrayList of UUIDs rather than Players, 
+	// as that can cause data leaks and bad stuff. UUIDs may be a bit
+	// more tedious, but it only takes you 30 more seconds.
+	private ArrayList<Player> vanished = new ArrayList<>(); 
+
+	// This is how I do my Main class instances - you don't have to do this.
+	private Main plugin;
+	
+	public EventsManager(Main instance) {
+		plugin = instance;
+	}
 	
 	@EventHandler
 	public void onFoodChange (FoodLevelChangeEvent e) {
@@ -37,7 +49,7 @@ public class EventsManager implements Listener {
 			e.setCancelled(true);
 			p.sendMessage(plugin.prefix + ChatColor.DARK_RED + "You are not able to drop items in Staff-Mode");
 		}
-} 
+	} 
 
 	@EventHandler
 	public void onMoveItem (InventoryMoveItemEvent e) {
@@ -47,8 +59,8 @@ public class EventsManager implements Listener {
 			p.sendMessage(plugin.prefix + ChatColor.DARK_RED + "You are not able to move items in Staff-Mode");
 		}
 	}
-	@EventHandler
-	public void onClick1(PlayerInteractEvent e) {
+	@EventHandler // Naming conventions aren't really mandatory, but I changed this to 'onPlayerInteract'
+	public void onPlayerInteract(PlayerInteractEvent e) { // I basically just merged all four of your events. Looks a lot simpler and efficient right?
 		 if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK ) {
 			Player p = e.getPlayer();
 			ItemStack stack = p.getItemInHand();
@@ -59,46 +71,28 @@ public class EventsManager implements Listener {
 				p.setGameMode(GameMode.SURVIVAL);
 			}
 			}
-		 }
-	}
-	@EventHandler
-	public void onClick2(PlayerInteractEvent e) {
-		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK ) {
-			Player p = e.getPlayer();
-			ItemStack stack2 = p.getItemInHand();
-			if(stack2 != null &&stack2.getType() == Material.COMPASS && stack2.hasItemMeta() && stack2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Random Teleport")){
+			 
+			if(stack != null &&stack.getType() == Material.COMPASS && stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Random Teleport")){
 				ArrayList<Player> players = new ArrayList<Player>();
 				for (Player e1 : Bukkit.getOnlinePlayers()) players.add(e1);
 				Player randomPlayer = players.get(new Random().nextInt(players.size()));
 				p.teleport(randomPlayer.getLocation());
 			}
-		}
-		
-	}
-	@EventHandler
-	public void onClick3(PlayerInteractEvent e) {
-		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK ) {
-			Player p = e.getPlayer();
-			ItemStack stack2 = p.getItemInHand();
-			if(stack2 != null &&stack2.getDurability() == 10 && stack2.hasItemMeta() && stack2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Vanish On")){
+			 
+			if(stack != null &&stack.getDurability() == 10 && stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Vanish On")){
 				p.sendMessage(ChatColor.AQUA + "You are now in vanish!");
 				for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
 					pl.hidePlayer(p);
 					} vanished.add(p);
 					
 			}
-		}
-	}
-	public void onClick4(PlayerInteractEvent e) {
-		if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK ) {
-			Player p = e.getPlayer();
-			ItemStack stack2 = p.getItemInHand();
-			if(stack2 != null &&stack2.getDurability() == 1 && stack2.hasItemMeta() && stack2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Vanish Off")){
+			 
+			 if(stack != null &&stack.getDurability() == 1 && stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "Vanish Off")){
 				p.sendMessage(ChatColor.AQUA + "You are now unvanished!");
 				for (Player pl : Bukkit.getServer().getOnlinePlayers()) {
 					pl.showPlayer(p);
 				} vanished.remove(p);
 			}
-		}
+		 }
 	}
 }
